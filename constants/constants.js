@@ -17,7 +17,7 @@ let categoriesData = [
     }
 ]
 
-const colorData=["#ff0000","#0000ff","#3cb371","#ee82ee","#ffa500","#6a5acd","#b4b4b4","#3c3c3c"]
+const colorData=["rgb(229, 229, 255)","rgb(255, 229, 246)","rgb(198, 236, 198)","rgb(255, 255, 179)","rgb(255, 204, 204)","rgb(235, 204, 255)","rgb(255, 242, 204)","rgb(204, 217, 255)"]
 
 
 export {categoriesData,colorData}

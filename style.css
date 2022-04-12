@@ -9,7 +9,7 @@
 }
 
 .notes-container{
-    flex:2;
+    flex:5;
 }
 .divider{
     flex:1;
@@ -104,4 +104,20 @@
     border-left: 1px solid rgb(118, 118, 118);
     border-right: 1px solid rgb(118, 118, 118);
     height: 20px;
+}
+
+@media screen and (max-width:950px){
+    .cat-container{
+        flex: 2;
+    }
+    .notes-container{
+        flex:5;
+    }
+    .notes-to-add-Box{
+        width: 95%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 20px;
+        grid-column-gap: 25px;
+    }
 }
