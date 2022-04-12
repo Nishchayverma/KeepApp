@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="style.css">
+    <title>Keep</title>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="cat-container">
+            <h2>Category</h2>
+            <div class="input-container">
+                <form id="categoryFormId">
+                    <input class="cat-input" placeholder="Insert new Category" type="text" name="category"/>
+                    <i style="cursor: pointer;" id="catBtnId" class="material-icons">add</i>
+                </form>
+            </div>
+            <ul class="cat-all">
+
+            </ul>
+        </div>
+
+        <div class="divider"></div>
+        <div class="notes-container">
+            <h2>Notes</h2>
+            <div class="input-container">
+                    <textarea class="note-input" placeholder="Add your note here" type="textbox" name="note"></textarea>
+                    <i id="noteBtnId" style="cursor: pointer;" class="material-icons">add</i>
+            </div>
+            <div class="notes-to-add-Box">
+                
+            </div>
+        </div>
+    </div>  
+    <script type="text/javascript">
+        let currentCategoryId =1;
+        let notesData=[]
+    </script>
+    <script type="module" src="notesLogic.js">
+    </script>
+    <script  type="module" src="categoriesLogic.js"></script>
+    <script type="module" src="notesFunctions/addNote.js"></script>
+    <script type="module" src="notesFunctions/listeningKeyPresses.js"></script>
+    <script type="module" src="notesFunctions/showNotes.js"></script>
+    
+</body>
+</html>
