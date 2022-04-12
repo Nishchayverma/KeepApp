@@ -5,6 +5,7 @@ import { handleDeleteNote } from './handleDeleteNote.js'
 let activeSelectionId = 1
 let activeColorSelection = ''
 
+
 window.addEventListener("load", showNotes)
 
 function setNoteContent(content) {
@@ -52,6 +53,40 @@ function showNoteCheckBox(noteId) {
 }
 
 
+function renderColorItemList( colorData, parentDiv) {
+    const colorItemsFrag = document.createDocumentFragment()
+    const colorItemContainer = document.createElement('div')
+    colorItemContainer.style.position="absolute"
+    colorItemContainer.style.zIndex="10"
+
+    colorData.map(color => {
+        const colorItem = document.createElement('div')
+        colorItem.style.background = color
+        colorItem.classList.add('colorItem')
+        colorItemContainer.appendChild(colorItem)
+        colorItem.addEventListener('click', () => {
+            notesData = notesData.map(note => ({
+                ...note, noteColor: note.id === activeColorSelection
+                    ? color
+                    : note.noteColor
+            }))
+            localStorageSetter("notesData", notesData)
+            showNotes()
+        })
+    })
+    colorItemsFrag.appendChild(colorItemContainer)
+    parentDiv.appendChild(colorItemsFrag)
+}
+
+function removeColorItemList(parentDiv) {
+    var child = parentDiv.lastElementChild
+
+    while (child) {
+        parentDiv.removeChild(child)
+        child = parentDiv.lastElementChild
+    }
+}
+
 
 export function showNotes() {
 
@@ -73,6 +108,8 @@ export function showNotes() {
         notesToDisplay.map(note => {
             let checkCompletedTaskTitleAdded = true
             let checkCompletedTaskTitleForCheckbox = true
+            let activeDropDownStatus = false
+
             const noteBox = document.createElement('div')
             noteBox.classList.add("note-box")
             noteBox.style.background = note.noteColor
@@ -81,9 +118,23 @@ export function showNotes() {
             note.noteContent.map(content => {
 
                 if (note.noteCheckBox) {
-
-                    let returnedItem = setNoteCheckBox(content)
-                    noteBox.appendChild(returnedItem)
+                    if(content.isNoteCompleted && checkCompletedTaskTitleForCheckbox){
+                        const isCompletedText = document.createElement('span')
+                        isCompletedText.innerText="Completed Tasks"
+                        isCompletedText.style.textDecoration="underline"
+                        allCompletedTasksForCheckBox.appendChild(isCompletedText)
+                        let returnedItem = setNoteCheckBox(content)
+                        allCompletedTasksForCheckBox.appendChild(returnedItem)
+                        checkCompletedTaskTitleForCheckbox= false
+                    }
+                    else if (content.isNoteCompleted) {
+                        let returnedItem = setNoteCheckBox(content)
+                        allCompletedTasksForCheckBox.appendChild(returnedItem)
+                    }
+                    else {
+                        let returnedItem =setNoteCheckBox(content)
+                        noteBox.appendChild(returnedItem)
+                    }
 
                 }
                 else {
@@ -112,7 +163,6 @@ export function showNotes() {
                 noteBox.appendChild(allCompletedTasks)
             }
             if (!checkCompletedTaskTitleForCheckbox) {
-                console.log("hey1233123")
                 noteBox.appendChild(allCompletedTasksForCheckBox)
             }
 
@@ -164,35 +214,22 @@ export function showNotes() {
             noteBox.appendChild(catSelectionDrop)
 
 
-            const colorSelection = document.createElement('select')
-            colorSelection.addEventListener('click', () => {
+            const colorSelectionParentDiv = document.createElement('div')
+            colorSelectionParentDiv.classList.add('colorSelection')
+            colorSelectionParentDiv.innerHTML = "Select color"
+            colorSelectionParentDiv.style.background = note.noteColor
+            colorSelectionParentDiv.addEventListener('click', () => {
+                removeColorItemList(colorSelectionParentDiv)
                 activeColorSelection = note.id
+                activeDropDownStatus = !activeDropDownStatus
+                if (activeDropDownStatus) {
+                    renderColorItemList( colorData, colorSelectionParentDiv)
+                }
+                else {
+                    removeColorItemList(colorSelectionParentDiv)
+                }
             })
-
-            colorSelection.classList.add("colorSelection")
-            colorSelection.style.background = note.noteColor
-            colorSelection.addEventListener('change', (e) => {
-                notesData = notesData.map(note => ({
-                    ...note, noteColor: note.id === activeColorSelection
-                        ? e.target.value
-                        : note.noteColor
-                }))
-                localStorageSetter("notesData", notesData)
-                showNotes()
-            })
-
-            const colorItem = document.createElement("option")
-            colorItem.innerHTML = "Select color"
-            colorSelection.appendChild(colorItem)
-            colorData.map(color => {
-                const newColorItem = document.createElement('option')
-                newColorItem.classList.add('colorItem')
-                newColorItem.innerHTML = `${color}`
-                newColorItem.style.background = color
-                newColorItem.setAttribute("value", color)
-                colorSelection.appendChild(newColorItem)
-            })
-            noteBox.appendChild(colorSelection)
+            noteBox.appendChild(colorSelectionParentDiv)
 
 
             notesFrag.appendChild(noteBox)
